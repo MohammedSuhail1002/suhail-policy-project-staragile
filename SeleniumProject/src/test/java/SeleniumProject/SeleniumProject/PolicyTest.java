@@ -1,91 +1,52 @@
 package SeleniumProject.SeleniumProject;
-
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.testng.annotations.AfterTest;  
-import org.testng.annotations.BeforeTest;  
-import org.testng.annotations.Test;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
-import junit.framework.TestCase;  
+public class PolicyTest {
 
-public class PolicyTest extends TestCase{
-	
-	//download chrom driver from https://googlechromelabs.github.io/chrome-for-testing/
-	public String baseUrl = "http://localhost:8080/seeddata";  
-	String driverPath = "C:\\Users\\krish\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe";  
-	
-	public WebDriver driver;
-	
-	@Test             
-	public void testGoogle() {      
-		// set the system property for Chrome driver      
-		System.out.println("inside testGoogle");
-		System.setProperty("webdriver.chrome.driver", driverPath);  
-		System.out.println("inside testGoogle "+driverPath);
-		// Create driver object for CHROME browser  
-		driver = new ChromeDriver();  
-		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);  
-		driver.manage().window().maximize();  
-		driver.get(baseUrl);  
-		
-		// get the current URL of the page  
-		String URL= driver.getCurrentUrl();  
-		System.out.print(URL);  
-		
-		//get the title of the page  
-		String title = driver.getTitle();                  
-		System.out.println(title);
-		
-		
-		
+    public String baseUrl = "http://localhost:8080/seeddata";
+    String driverPath = "C:\\Users\\jrskm\\Downloads\\chromedriver-win64_2\\chromedriver-win64\\chromedriver.exe";
 
-        waitForMe(2000);
-		// Find the search input element
-        //WebElement searchInput = driver.findElement(By.name("q"));
-		WebElement e = driver.findElement(By.xpath("//*[text()='Data seeded successfully!!!']"));
-		System.out.println("Element with text(): [" + e.getText() +"]");
-		Assert.assertEquals("Data seeded successfully!!!", e.getText());
-		
-		driver.quit();
-        
-		waitForMe(1000);
-        // Enter search text
-        //searchInput.sendKeys("vilas");
+    public WebDriver driver;
 
-        //waitForMe(1000);
-        
-        // Submit the search form
-        //searchInput.submit();
+    @Test
+    public void testGoogle() {
+        // Specify the ChromeDriver path directly
+        System.setProperty("webdriver.chrome.driver", driverPath);
 
-        //waitForMe(5000);
+        // Create a ChromeDriver instance
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get(baseUrl);
+
+        // Use WebDriverWait to wait for the element to be visible
+        WebDriverWait wait = new WebDriverWait(driver, 20); // Adjust the timeout as needed
+
+        // Wait for the element with text 'Data seeded successfully!!!'
+        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[text()='Data seeded successfully!!!']")));
+
+        // Assert that the text matches the expected value
+        Assert.assertEquals("Data seeded successfully!!!", successMessage.getText());
 
         // Close the browser
-        //driver.quit();
-	}   
-	
-	public void waitForMe(int time) {
-		// Wait for a few seconds to see the results
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-	}
-	
-	@BeforeTest  
-	public void beforeTest() {    
-		System.out.println("before test");  
-	}     
-	@AfterTest  
-	public void afterTest() {  
-		//driver.quit();  
-		System.out.println("after test");  
-	}         	
+        driver.quit();
+    }
 
+    @BeforeTest
+    public void beforeTest() {
+        System.out.println("Before test");
+    }
+
+    @AfterTest
+    public void afterTest() {
+        System.out.println("After test");
+    }
 }
